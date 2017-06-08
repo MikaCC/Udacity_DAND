@@ -243,3 +243,7 @@ sandwich								1
 * `report.pdf` : pdf of this document
 * `sample.py` : extract sample data from the OSM file
 * `tags.py` : count number of top level tags
+
+# Reference
+* https://discussions.udacity.com/t/validation-error-osm/247882/4
+* https://classroom.udacity.com/nanodegrees/nd002/parts/0021345404/modules/316820862075463/lessons/3168208620239847/concepts/77135319070923
