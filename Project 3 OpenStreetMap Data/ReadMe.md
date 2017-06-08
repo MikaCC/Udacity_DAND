@@ -82,13 +82,13 @@ To standardize the format, we want it all to be in XXX-XXX-XXXX or 1-XXX-XXX-XXX
 
 
 
-#3. Data Overview
+# 3. Data Overview
 
 This part we first use the 'data.py' to create csv files that preparing for the dagabase. Then create the database and explore it with SQL queries.
 
 ### File sizes:
 
-* `ahmedabad_india.osm: 109.2 MB`
+* `san-francisco_california.osm: 109.2 MB`
 * `nodes_csv: 43.4 MB`
 * `nodes_tags.csv: 163.4 KB`
 * `ways_csv: 4.6 MB`
