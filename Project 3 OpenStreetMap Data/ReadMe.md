@@ -8,7 +8,7 @@
 * [OpenStreetMap URL](https://www.openstreetmap.org/relation/111968)
 * [MapZen URL](https://mapzen.com/data/metro-extracts/metro/san-francisco_california/)
 
-I went to college at Berkeley and stayed aroud the bay area for a couple of years. San Francisco is the city I was familiar with and I miss it a lot. I am very interested in lookin at the data of this city and hopefully contribute to it myself.
+I went to college at Berkeley and stayed aroud the bay area for a couple of years. San Francisco is the city I was familiar with and I miss it a lot. I am very interested in looking at the data of this city and hopefully contribute to it myself.
 
 # 1. Tag Overview
 
