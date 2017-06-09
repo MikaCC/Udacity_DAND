@@ -88,77 +88,78 @@ This part we first use the 'data.py' to create csv files that preparing for the 
 
 ### File sizes:
 
-* `san-francisco_california.osm: 109.2 MB`
-* `nodes_csv: 43.4 MB`
-* `nodes_tags.csv: 163.4 KB`
-* `ways_csv: 4.6 MB`
-* `ways_nodes.csv: 14.7 MB`
-* `ways_tags.csv: 2.8 MB`
-* `ahmedabad.db: 78.5 MB`
+* `san-francisco_california.osm: 1.4 G`
+* `nodes_csv: 550 MB`
+* `nodes_tags.csv: 9.5 MB`
+* `ways_csv: 49.2 MB`
+* `ways_nodes.csv: 186.9 MB`
+* `ways_tags.csv: 62.6 MB`
+* `sfosm.db: 746.3 MB`
+
 
 ###Number of nodes:
 ``` python
-sqlite> SELECT COUNT(*) FROM nodes
+sqlite> SELECT COUNT(*) FROM node
 ```
 **Output:**
 ```
-525565
+6559145
 ```
 
 ### Number of ways:
 ```python
-sqlite> SELECT COUNT(*) FROM ways
+sqlite> SELECT COUNT(*) FROM way
 ```
 **Output:**
 ```
-77866
+807514
 ```
 
 ###Number of unique users:
 ```python
-sqlite> SELECT COUNT(DISTINCT(e.uid))          
-FROM (SELECT uid FROM nodes UNION ALL SELECT uid FROM ways) e;
+sqlite> SELECT COUNT(DISTINCT(sub.uid))          
+FROM (SELECT uid FROM node UNION ALL SELECT uid FROM way) as sub;
 ```
 **Output:**
 ```
-226
+2740
 ```
 
 ###Top contributing users:
 ```python
-sqlite> SELECT e.user, COUNT(*) as num
-FROM (SELECT user FROM nodes UNION ALL SELECT user FROM ways) e
-GROUP BY e.user
+sqlite> SELECT sub.user, COUNT(*) as num
+FROM (SELECT user FROM node UNION ALL SELECT user FROM way) as sub
+GROUP BY sub.user
 ORDER BY num DESC
 LIMIT 10;
 ```
 **Output:**
 
 ```
-uday01			177686
-sramesh			136887
-chaitanya110	123328
-shashi2			49514
-vkvora			22216
-shravan91		21508
-shiva05			19671
-bhanu3			12645
-Oberaffe		7042
-PlaneMad		4969
+andygol|1497774
+ediyes|888405
+Luis36995|663476
+dannykath|540943
+RichRico|404889
+Rub21|383614
+calfarome|186305
+oldtopos|166631
+KindredCoda|151266
+karitotp|135711
 ```
 
 ###Number of users contributing only once:
 ```python
 sqlite> SELECT COUNT(*) 
 FROM
-    (SELECT e.user, COUNT(*) as num
-     FROM (SELECT user FROM nodes UNION ALL SELECT user FROM ways) e
-     GROUP BY e.user
-     HAVING num=1) u;
+    (SELECT sub.user, COUNT(*) as num
+     FROM (SELECT user FROM node UNION ALL SELECT user FROM way) as sub
+     GROUP BY sub.user
+     HAVING num=1) as subsub;
 ```
 **Output:**
 ```
-44
+682
 ```
 
 # 4. Additional Data Exploration
@@ -247,3 +248,4 @@ sandwich								1
 # Reference
 * https://discussions.udacity.com/t/validation-error-osm/247882/4
 * https://classroom.udacity.com/nanodegrees/nd002/parts/0021345404/modules/316820862075463/lessons/3168208620239847/concepts/77135319070923
+* https://gist.github.com/carlward/54ec1c91b62a5f911c42#file-sample_project-md
