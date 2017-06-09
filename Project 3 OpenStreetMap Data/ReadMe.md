@@ -97,7 +97,7 @@ This part we first use the 'data.py' to create csv files that preparing for the 
 * `sfosm.db: 746.3 MB`
 
 
-###Number of nodes:
+### Number of nodes:
 ``` python
 sqlite> SELECT COUNT(*) FROM node
 ```
@@ -115,7 +115,7 @@ sqlite> SELECT COUNT(*) FROM way
 807514
 ```
 
-###Number of unique users:
+### Number of unique users:
 ```python
 sqlite> SELECT COUNT(DISTINCT(sub.uid))          
 FROM (SELECT uid FROM node UNION ALL SELECT uid FROM way) as sub;
@@ -125,7 +125,7 @@ FROM (SELECT uid FROM node UNION ALL SELECT uid FROM way) as sub;
 2740
 ```
 
-###Top contributing users:
+### Top contributing users:
 ```python
 sqlite> SELECT sub.user, COUNT(*) as num
 FROM (SELECT user FROM node UNION ALL SELECT user FROM way) as sub
@@ -148,7 +148,7 @@ KindredCoda|151266
 karitotp|135711
 ```
 
-###Number of users contributing only once:
+### Number of users contributing only once:
 ```python
 sqlite> SELECT COUNT(*) 
 FROM
@@ -164,10 +164,10 @@ FROM
 
 # 4. Additional Data Exploration
 
-###Common ammenities:
+### Common ammenities:
 ```python
 sqlite> SELECT value, COUNT(*) as num
-FROM nodes_tags
+FROM node_tags
 WHERE key='amenity'
 GROUP BY value
 ORDER BY num DESC
@@ -176,61 +176,67 @@ LIMIT 10;
 ```
 **Output:**
 ```
-place_of_worship	47
-restaurant			31
-bank				21
-school				18
-fuel				14
-library				14
-hospital			13
-cafe				12
-fast_food			11
-cinema				10
+restaurant|2925
+bench|1183
+cafe|989
+place_of_worship|694
+post_box|685
+school|583
+fast_food|580
+bicycle_parking|566
+drinking_water|519
+toilets|410
 ```
 
-###Biggest religion:
+### Religions:
 ```python
-sqlite> SELECT nodes_tags.value, COUNT(*) as num
-FROM nodes_tags 
-    JOIN (SELECT DISTINCT(id) FROM nodes_tags WHERE value='place_of_worship') i
-    ON nodes_tags.id=i.id
-WHERE nodes_tags.key='religion'
-GROUP BY nodes_tags.value
+sqlite> SELECT node_tags.value, COUNT(*) as num
+FROM node_tags 
+    JOIN (SELECT DISTINCT(id) FROM node_tags WHERE value='place_of_worship') as a
+ON node_tags.id=a.id
+WHERE node_tags.key='religion'
+GROUP BY node_tags.value
 ORDER BY num DESC
-LIMIT 1;
+LIMIT 5;
 ```
 **Output:**
 ```
-Hindu :	31
+christian|632
+buddhist|15
+jewish|10
+muslim|4
+unitarian_universalist|2
 ```
-###Popular cuisines
+### Popular cuisines
 ```python
-sqlite> SELECT nodes_tags.value, COUNT(*) as num
-FROM nodes_tags 
-    JOIN (SELECT DISTINCT(id) FROM nodes_tags WHERE value='restaurant') i
-    ON nodes_tags.id=i.id
-WHERE nodes_tags.key='cuisine'
-GROUP BY nodes_tags.value
-ORDER BY num DESC;
+sqlite> SELECT node_tags.value, COUNT(*) as num
+FROM node_tags 
+    JOIN (SELECT DISTINCT(id) FROM node_tags WHERE value='restaurant') as sub
+    ON node_tags.id=sub.id
+WHERE node_tags.key='cuisine'
+GROUP BY node_tags.value
+ORDER BY num DESC LIMIT 10;
 ```
 **Output:**
 ```
-regional								4
-vegetarian								3
-pizza									2
-Punjabi,_SouthIndia,_Gujarati Thali		1
-burger									1
-indian									1
-international							1
-italian									1
-sandwich								1
+mexican|194
+chinese|164
+pizza|151
+japanese|141
+italian|128
+thai|107
+american|98
+vietnamese|70
+indian|58
+sushi|56
 ```
+
 
 # 5. Conclusion
-
+The San Francisco dataset is a relative big one with more than 19 million top level tags. Through the data cleaning process we can see that the biggest problem is the inconsistency of information format. We standardized the address and phone number format by eliminatiing abbreviations and lowercased addresses, and reformatting phone numbers. And by putting these information into database, we can get much information including amenities, religions, popular cuisines of the area, and how much users have contribute to the dataset. There is certainly more to be discover. San Francisco is a city that I am familiar with. Next time I want to try look at a compelet strange city and try understanding it beginning from the its data.
 
 ### Additional Suggestion and Ideas
-
+The cleaning process I conducted on this dataset is far from enough. There are still a lot inconsistencies including address, post codes, city names and etc. If there is a standardized way for us to record each type of information, the information itself will be much more efficient. 
 
 
 # Files
@@ -238,9 +244,7 @@ sandwich								1
 * `sample.osm`: sample data of the OSM file
 * `audit.py` : audit street, city and update their names
 * `data.py` : parse the data and build 5 seperate CSV files from OSM 
-* `database.py` : create database from the CSV files
 * `mapparser.py` : find unique tags in the data
-* `query.py` : different queries about the database using SQL
 * `report.pdf` : pdf of this document
 * `sample.py` : extract sample data from the OSM file
 * `tags.py` : count number of top level tags
