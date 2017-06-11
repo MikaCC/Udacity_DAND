@@ -13,6 +13,8 @@ import xml.etree.cElementTree as ET
 
 import cerberus
 
+import audit
+
 import schema
 
 OSM_PATH = "san-francisco_california.osm"
@@ -35,6 +37,38 @@ WAY_FIELDS = ['id', 'user', 'uid', 'version', 'changeset', 'timestamp']
 WAY_TAGS_FIELDS = ['id', 'key', 'value', 'type']
 WAY_NODES_FIELDS = ['id', 'node_id', 'position']
 
+def update_tag(element, child, tag_type):
+    """
+    function to call update functions in audit
+    """
+    new = {}
+    new['id'] = element.attrib['id']
+    if ":" not in child.attrib['k']:
+        new['key'] = child.attrib['k']
+        new['type'] = tag_type
+    else:
+        post_colon = child.attrib['k'].index(":") + 1
+        new['key'] = child.attrib['k'][post_colon:]
+        new['type'] = child.attrib['k'][:post_colon - 1]
+
+    # Call street update function
+    if  child.attrib['k'] == "addr:street":
+        street_new = audit.fix_street(child.attrib['v'])
+        new['value'] = street_new
+    
+    # Call phone update function
+    elif new['key'] == 'phone':
+        new_phone = audit.fix_phonenumber(child.attrib['v'])
+        if phone_num is not None:
+            new['value'] = new_phone
+        else:
+            return None
+
+    else:
+        new['value'] = child.attrib['v']
+    
+    return new
+
 
 def shape_element(element, node_attr_fields=NODE_FIELDS, 
                   way_attr_fields=WAY_FIELDS, problem_chars=PROBLEMCHARS,
@@ -46,6 +80,8 @@ def shape_element(element, node_attr_fields=NODE_FIELDS,
     way_nodes = []
     # Handle secondary tags the same way for both node and way elements
     tags = [] 
+    
+    
 
     # YOUR CODE HERE
     if element.tag == 'node':
@@ -62,30 +98,13 @@ def shape_element(element, node_attr_fields=NODE_FIELDS,
             # if tag "k" contains problematic characters, ignore it
             if PROBLEMCHARS.match(child.attrib["k"]):
                 continue
-            
-            # one dictionay per secondary tag
-            second_tag = {}
-            
-            # share the top level node id
-            second_tag['id'] = element.attrib['id']
-            second_tag['value'] = child.attrib['v']
-            
-            # for single ":", set characters before ":" as tag type
-            # characters after ":" as tag key
-            # for additional ":" keep as part of the tag key
-            if LOWER_COLON.match(child.attrib["k"]):
-                second_tag['type'] =  child.attrib["k"].split(":",1)[0]
-                second_tag['key'] = child.attrib["k"].split(":",1)[1]
-            
-            # if no ":", set tag type as "regular", tag key as full "k" attribute
-            else:
-                second_tag["type"] = "regular"
-                second_tag["key"] = child.attrib["k"]
-                
-            # a list of dictionaries    
-            tags.append(second_tag)
-        
+            # update secondary tags
+            new = update_tag(element, child, tag_type)
+                    if new is not None:
+                        tags.append(new)
         return {'node': node_attribs, 'node_tags': tags}
+            
+
         
     elif element.tag == 'way':
         for field in WAY_FIELDS:
@@ -99,18 +118,10 @@ def shape_element(element, node_attr_fields=NODE_FIELDS,
             if child.tag == 'tag':
                 if PROBLEMCHARS.match(child.attrib["k"]):
                     continue
-                
-                second_tag_dict = {}
-                second_tag_dict['id'] = element.attrib['id']
-                second_tag_dict['value'] = child.attrib['v']
-                
-                if LOWER_COLON.match(child.attrib["k"]):
-                    second_tag_dict['type'] = child.attrib["k"].split(":",1)[0]
-                    second_tag_dict['key'] = child.attrib["k"].split(":",1)[1]
                 else:
-                    second_tag_dict["type"] = "regular"
-                    second_tag_dict["key"] = child.attrib["k"]
-                tags.append(second_tag_dict)
+                    new = load_new_tag(element, child, tag_type)
+                    if new is not None:
+                        tags.append(new)
             
             elif child.tag == 'nd':
                 way_nodes_dict = {}
