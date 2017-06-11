@@ -239,7 +239,16 @@ sushi|56
 The San Francisco dataset is a relative big one with more than 19 million top level tags. Through the data cleaning process we can see that the biggest problem is the inconsistency of information format. We standardized the address and phone number format by eliminatiing abbreviations and lowercased addresses, and reformatting phone numbers. And by putting these information into database, we can get much information including amenities, religions, popular cuisines of the area, and how much users have contribute to the dataset. There is certainly more to be discover. San Francisco is a city that I am familiar with. Next time I want to try look at a compelet strange city and try understanding it beginning from the its data.
 
 ### Additional Suggestion and Ideas
-The cleaning process I conducted on this dataset is far from enough. There are still a lot inconsistencies including address, post codes, city names and etc. If there is a standardized way for us to record each type of information, the information itself will be much more efficient. 
+The cleaning process I conducted on this dataset is far from enough. There are still a lot inconsistencies including address, post codes, city names and etc. If there is a standardized way for us to record each type of information, the information itself will be much more efficient. For example, if we import data from Google Map/ Yelp, as the data format is standardized on these third party apps, the imported data maybe better formatted and more complete. By implementing this method, some benefits as well as problems may occur:
+
+* Benefits:
+  * Better formatted information - As there is a more standardized way of address, phonumber information on google map
+  * Faster updates - For example, if a restaurant moved and thus need to update its address, it is more likely their first         place to update thier information will be yelp. So if we pull information directly from yelp, it will be more efficient.
+  
+* Problems:
+  * Conflicted information - Import information from various sources may result in conflicts. The name/address for the same       location may vary due to how it was recorded on different database.
+  * Possible costs - Including other parties to improve the database may add extra cost.
+
 
 
 # Files
