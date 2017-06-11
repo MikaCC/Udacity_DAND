@@ -97,6 +97,7 @@ This part we first use the 'data.py' to create csv files that preparing for the 
 * `sfosm.db: 746.3 MB`
 
 
+
 ### Number of nodes:
 ``` python
 sqlite> SELECT COUNT(*) FROM node
@@ -147,6 +148,7 @@ oldtopos|166631
 KindredCoda|151266
 karitotp|135711
 ```
+The top contributing user contributed to more than a million nodes!!
 
 ### Number of users contributing only once:
 ```python
@@ -187,6 +189,7 @@ bicycle_parking|566
 drinking_water|519
 toilets|410
 ```
+The most common amenenty is restraunt - there are about three thousand restaurants in the area!
 
 ### Religions:
 ```python
