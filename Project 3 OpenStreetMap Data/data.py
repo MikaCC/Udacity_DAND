@@ -37,7 +37,7 @@ WAY_FIELDS = ['id', 'user', 'uid', 'version', 'changeset', 'timestamp']
 WAY_TAGS_FIELDS = ['id', 'key', 'value', 'type']
 WAY_NODES_FIELDS = ['id', 'node_id', 'position']
 
-def update_tag(element, child, tag_type):
+def update_tag(element, child, default_tag_type):
     """
     function to call update functions in audit
     """
@@ -45,7 +45,7 @@ def update_tag(element, child, tag_type):
     new['id'] = element.attrib['id']
     if ":" not in child.attrib['k']:
         new['key'] = child.attrib['k']
-        new['type'] = tag_type
+        new['type'] = default_tag_type
     else:
         post_colon = child.attrib['k'].index(":") + 1
         new['key'] = child.attrib['k'][post_colon:]
@@ -99,7 +99,7 @@ def shape_element(element, node_attr_fields=NODE_FIELDS,
             if PROBLEMCHARS.match(child.attrib["k"]):
                 continue
             # update secondary tags
-            new = update_tag(element, child, tag_type)
+            new = update_tag(element, child, default_tag_type)
                     if new is not None:
                         tags.append(new)
         return {'node': node_attribs, 'node_tags': tags}
@@ -119,7 +119,7 @@ def shape_element(element, node_attr_fields=NODE_FIELDS,
                 if PROBLEMCHARS.match(child.attrib["k"]):
                     continue
                 else:
-                    new = load_new_tag(element, child, tag_type)
+                    new = update_tag(element, child, default_tag_type)
                     if new is not None:
                         tags.append(new)
             
