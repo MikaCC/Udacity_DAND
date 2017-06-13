@@ -248,6 +248,7 @@ The cleaning process I conducted on this dataset is far from enough. There are s
 * Problems:
   * Conflicted information - Import information from various sources may result in conflicts. The name/address for the same       location may vary due to how it was recorded on different database.
   * Possible costs - Including other parties to improve the database may add extra cost.
+  * Less motivation for contributers - The more standardized formatting means stricker rules for users to contribute extra         information. This may make users less motivated to contribute.
 
 
 
