@@ -87,7 +87,7 @@ After modifying the data and removing outliers from residual sugar and chlorides
 ## Bivariate relationships
 We can quickly visualize the relationship between each pair of variables and find their pearson product-moment correlation. The names along the x and y axis of the plot matrix below are as follows:
 
-```{r echo=FALSE}
+```{r}
 names(wine)[2:13]
 ```
 
@@ -187,7 +187,7 @@ tapply(wine$sulphates, factor(wine$quality), summary)
 
 Frome the last section, I found out that alcohol, sulphates and volatile acidity have crutial impact on red wine quality.
 I want to create a plot to visualize the relationship between these factors:
-```r echo=FALSE}
+```{r }
 ggplot(wine, aes(x=volatile.acidity, y=sulphates, size = alcohol,
                  color=factor(quality))) +
   geom_point() +
@@ -198,7 +198,7 @@ It looks like the higher quality red wines tend to be concentrated at sulphate 0
 
 
 Let's only look at how quality relates to alcohol and sulphate by creating a contour plot:
-```{r echo=FALSE}
+```{r}
 ggplot(wine, aes(x = sulphates, y = alcohol,
                  colour=factor(wine$quality))) +
   geom_density2d(bins=3) +
@@ -340,7 +340,7 @@ grid.arrange(top, empty, main, right, ncol=2, nrow=2, widths=c(4, 1), heights=c(
 
 Here I combined the scatter plot with two density plots of the corresponding variables. As the density plots shows a positive relationship between each variable (sulphate and alcohol) and quality, the scatter plot also gives a straightforward visualization of how quality level increases from the bottom left corner to the top right corner (yellow to green to blue).
 
-#Reflection
+# Reflection
 
 The red wine data set contains information of 12 variables for 1599 entries. The objective to explore this data set is to explore how different factors contribute to red wine quality. So first of all I plotted the distribution of quality and observed that it ranges from 3 to 8 while concentrate at average of 5 and 6. Then I started with looking at each of the other variable individually and understanding their features and distributions. I found that most of the data follows normal distribution. And for some of the variables, their distributions look normal after removing outliers.
 
