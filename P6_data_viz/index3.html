@@ -120,8 +120,9 @@
           y.titleShape.text("Survival Rate");
 
       });
-//function for making the bar charts using two variable analysis
-//Bar chart for visualizing the survivors by sex and passenger class
+
+    
+//Bar chart for visualizing the survivors by class
      d3.select("#btn_1").on("click", function()
     {
         d3.select("svg").remove();
@@ -174,7 +175,9 @@
       {
         button_after_click(this);
       });
-  //Bar chart for Survivors by Sex on the click of first button
+    
+    
+  //Bar chart for Survivors by Sex
     d3.select("#btn_2").on("click", function()
      {
          d3.select("svg").remove();
@@ -230,6 +233,7 @@
     {
        button_after_click(this);
     });
+    
 
     //Bar chart for Survivors by age group
     d3.select("#btn_3").on("click", function()
@@ -298,9 +302,9 @@
     {
         button_after_click(this);
     });
-    //function for making the bar charts using two variable analysis
+   
+    
     //Survivor by Age group and sex
-
     d3.select("#btn_4").on("click", function()
      {
         d3.select("svg").remove();
