@@ -4,7 +4,11 @@
 The project is based on information of titanic passengers. It visualize/analyze how different groups of people (age, sex, class) have different survival percentage.
 
 ## Design
-In the previous data analysis project, I was working on the same dataset. So this project is really an html visualization version of that adding some cool stuff to the results. I want to create bar charts which works great for comparing different groups. In order to plot the graph I made a few more columns in the csv file grouping age/survival status.
+In the previous data analysis project, I was working on the same dataset. So this project is really an html visualization version of that adding some cool stuff to the results. I want to create bar charts which works great for comparing different groups. In order to plot the graph I made a few more columns in the csv file grouping age/survival status. 
+
+On the graph, x axis shows the factors we are looking at (age,sex and class) and y axis shows the survival rate. 
+
+The color tone for the grpah is in general light blue (for those survived) and gray (for those not survived). I put it in a soft tone and focus on those who survived because the purpose of the analysis is to show what factors impact the survival rate.
 
 ## Feedbacks:
 index.html is the initial version.
