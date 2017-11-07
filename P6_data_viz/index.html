@@ -1,0 +1,227 @@
+<html>
+<head>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="http://dimplejs.org/dist/dimple.v2.0.0.min.js"></script>
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+  <div id="textContainer"></div>
+  <div id="buttonContainer"></div>
+  <div id="chartContainer"></div>
+
+  <script type="text/javascript">
+  var link = "titanic data"
+    d3.select("#textContainer")
+          .append("h2")
+          .text("Summary of the Titanic Survivors");
+    d3.select("#textContainer")
+          .append("p")
+          .text("Visualizing the total number of survivors according to the passenger class, sex and age. There were 891 passengers on board, 342 out of which survived. ")
+    d3.select("#textContainer")
+          .append("p")
+          .text("Click on the buttons below to visualize the survivors accordingly.");
+    create_buttons("btn_1","Survivors by class")
+    create_buttons("btn_2","Survivors by sex")
+    create_buttons("btn_3","Survivors by age")
+    //creating interactive buttons
+    function create_buttons(id,text)
+    {
+        d3.select("#buttonContainer")
+          .append("button")
+          .attr("id",id)
+          .style("background", "#b6aca7")
+          .text(text);
+    }
+    //changing the color of the clicked button
+    function button_on_click(c)
+    {
+
+        d3.select(c)
+
+    }
+    //Function for restoring the color of the button after mouseout
+    function button_after_click(c)
+    {
+        d3.select(c)
+
+     }
+    function add_text(s,chart,text)
+    {
+        s.append("text")
+         .attr("x", chart._xPixels() + chart._widthPixels() / 2.5)
+         .attr("y", chart._yPixels() - 10)
+         .style("text-anchor", "middle")
+         .style("font-weight", "bold")
+         .text(text);
+    }
+
+//function for making the bar charts using two variable analysis
+//Bar chart for visualizing the survivors by sex and passenger class
+     d3.select("#btn_1").on("click", function()
+    {
+        d3.select("svg").remove();
+        button_on_click(this);
+
+        var svg = dimple.newSvg("#chartContainer", 700, 400);
+        d3.csv("titanic_data.csv", function (data)
+        {
+           var myChart = new dimple.chart(svg, data);
+           myChart.setBounds(65, 45, 505, 315)
+           var x = myChart.addCategoryAxis("x", ["Pclass"]);
+           x.addOrderRule(['1', '2', '3', 'NA']);
+           var y = myChart.addPctAxis("y", "Passengers");
+           var s = myChart.addSeries(["Pclass","Status"], dimple.plot.bar);
+           s.addOrderRule("Status",true)
+           s.afterDraw = function (shape, data)
+           {
+             var s = d3.select(shape),
+             rect =
+             {
+                x: parseFloat(s.attr("x")),
+                y: parseFloat(s.attr("y")),
+                width: parseFloat(s.attr("width")),
+                height: parseFloat(s.attr("height"))
+              };
+              if (rect.height >= 8)
+              {
+                svg.append("text")
+                   .attr("x", rect.x + rect.width / 2)
+                   .attr("y", rect.y + rect.height / 2 + 3.5)
+                   .style("text-anchor", "middle")
+                   .style("font-size", "10px")
+                   .style("font-family", "sans-serif")
+                   .style("opacity", 0.6)
+                   .style("pointer-events", "None")
+                   .text( d3.format("%")(data.height));
+              }
+            };
+         myChart.addLegend(150, 10, 530, 20, "right");
+
+
+         myChart.draw(1000);
+         //add_text(svg,myChart,"It is seen that the females of passenger class 1 were the maximum survivors")
+         y.titleShape.text("Survival Rate");
+        });
+      }).on("mouseout", function()
+      {
+        button_after_click(this);
+      });
+  //Bar chart for Survivors by Sex on the click of first button
+    d3.select("#btn_2").on("click", function()
+     {
+         d3.select("svg").remove();
+         button_on_click(this);
+         var svg = dimple.newSvg("#chartContainer", 700, 400); //height and width of the charts 650,375
+         d3.csv("titanic_data.csv", function (data)
+         {
+           var myChart = new dimple.chart(svg, data);
+           myChart.setBounds(65, 30, 600, 305)
+           var x = myChart.addCategoryAxis("x", "Sex");//creating the x axis
+           var y = myChart.addPctAxis("y", "Passengers"); //creating the y axis
+           y.overrideMax = 1;
+           var s = myChart.addSeries("Status", dimple.plot.bar);
+           s.addOrderRule("Status",true);
+          //plotting the bar chart
+           x.fontSize = "auto";
+          //size of the bars according to the values of the columns
+           s.afterDraw = function (shape, data)
+          {
+            var s = d3.select(shape),
+            rect =
+              {
+                x: parseFloat(s.attr("x")),
+                y: parseFloat(s.attr("y")),
+                width: parseFloat(s.attr("width")),
+                height: parseFloat(s.attr("height"))
+              };
+          //plotting the number of passengers survived in the bars
+            if (rect.height >= 8)
+               {
+                  svg.append("text")
+                     .attr("x", rect.x + rect.width / 2)
+                     .attr("y", rect.y + rect.height / 2 + 3.5)
+                     .style("text-anchor", "middle")
+                     .style("font-size", "10px")
+                     .style("font-family", "sans-serif")
+                     .style("opacity", 0.8)
+                     .style("pointer-events", "none")
+                     .text( d3.format("%")(data.height));
+                }
+          };
+          myChart.addLegend(150, 10, 530, 20, "right");
+           //add_text(svg,myChart,"There was higher rate of female survivors than male")
+          myChart.draw(1000);
+          y.titleShape.text("Survival Rate");
+        });
+     }).on("mouseout", function()
+    {
+       button_after_click(this);
+    });
+
+    //Bar chart for Survivors by age group
+    d3.select("#btn_3").on("click", function()
+    {
+        d3.select("svg").remove();
+        button_on_click(this);
+        //draw_charts("titanic_data.csv","Age","PassengerId",null);
+        var svg = dimple.newSvg("#chartContainer", 700, 400);
+        d3.csv("titanic_data.csv", function (data)
+        {
+
+          var myChart = new dimple.chart(svg, data);
+          myChart.setBounds(65, 30, 600, 305)
+          var x = myChart.addCategoryAxis("x", "AgeGroup");//creating the x axis
+          //Setting the order of the x axis
+          x.addOrderRule(['Child', 'Teenager', 'Adult','NA']);
+          //x.addOrderRule('NA',false);
+
+          var y = myChart.addPctAxis("y", "Passengers"); //creating the y axis
+          y.overrideMax = 1;
+          var s = myChart.addSeries("Status", dimple.plot.bar);
+          s.addOrderRule("Status",true)
+          //plotting the bar chart
+          x.fontSize = "auto";
+          //size of the bars according to the values of the columns
+          s.afterDraw = function (shape, data)
+          {
+              var s = d3.select(shape),
+              rect =
+              {
+                x: parseFloat(s.attr("x")),
+                y: parseFloat(s.attr("y")),
+                width: parseFloat(s.attr("width")),
+                height: parseFloat(s.attr("height"))
+              };
+          //plotting the number of passengers survived in the bars
+              if (rect.height >= 8)
+               {
+                  svg.append("text")
+                     .attr("x", rect.x + rect.width / 2)
+                     .attr("y", rect.y + rect.height / 2 + 3.5)
+                     .style("text-anchor", "middle")
+                     .style("font-size", "10px")
+                     .style("font-family", "sans-serif")
+                     .style("opacity", 0.8)
+                     .style("pointer-events", "none")
+                     .text(d3.format(" ")(data.xValue))
+                     .text( d3.format("%")(data.height));
+                }
+          };
+          myChart.addLegend(150, 10, 530, 20, "right");
+           //add_text(svg,myChart,"Senior citizens had the highest rate of survival");
+           myChart.draw(1000);
+           y.titleShape.text("Survival Rate");
+
+
+        });
+
+    })
+    .on("mouseout", function()
+    {
+        button_after_click(this);
+    });
+
+
+  </script>
+</body>
+</html>
